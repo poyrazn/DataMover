@@ -1,0 +1,14 @@
+# default: off
+# description:
+#
+
+service del {
+    protocol       = tcp
+    disable        = no
+    port           = 4444
+    flags          = REUSE
+    socket_type    = stream
+    user           = root
+    server         = server_xinetd_put.py
+    log_on_failure += USERID
+}

@@ -1,0 +1,14 @@
+# default: off
+# description:
+#
+
+service list {
+    protocol       = tcp
+    disable        = no
+    port           = 1111
+    flags          = REUSE
+    socket_type    = stream
+    user           = root
+    server         =
+    log_on_failure += USERID
+}
