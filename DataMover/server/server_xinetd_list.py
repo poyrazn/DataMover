@@ -11,19 +11,20 @@ import sys
 import socket
 
 HOST = ''  # The variable of HOST is null, so the function bind( ) can be bound to all valid addresses.
-PORT = 21567
+PORT = 1111
 BUFSIZ = 1024  # Size of the buffer
 ADDR = (HOST, PORT)
 sersock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sersock.bind(ADDR)
+sersock.listen(5)
 if __name__ == '__main__':
     while True:
         clisock, addr = sersock.accept()
         while True:
             data = clisock.recv(BUFSIZ)
-            print("Received", data)
+            print "Received", data
             sent = sersock.send("Foo")
-            print("Sent", sent)
+            print "Sent", sent
             # directory = '/Users/nehir/Desktop/test'
             # if os.path.exists(directory) and os.path.isdir(directory):
             #     dirs = os.scandir(directory)

@@ -21,13 +21,13 @@ def list():
 
 if __name__ == '__main__':
     sock.send("Connected")
-    print("Connected from:", sock.getsockname())
-    print("Connected to:", sock.getpeername())
+    print "Connected from:", sock.getsockname()
+    print "Connected to:", sock.getpeername()
     while True:
-        print("waiting")
+        print "waiting"
         result = sock.recv(1024)
-        print(result)
+        print result
         sock.send('foo')
-        print("Sent: foo")
+        print "Sent: foo"
         if result == 3:
             break
