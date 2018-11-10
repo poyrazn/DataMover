@@ -1,14 +1,16 @@
 # default: off
-# description:
+# description: An xinetd service to retrieve files from clients upon request using tcp protocol
 #
 
-service put {
+service put
+{
     protocol       = tcp
     disable        = no
     port           = 2222
     flags          = REUSE
     socket_type    = stream
     user           = root
-    server         =
+    wait           = no
+    server         = /home/server/server_xinetd_put.py
     log_on_failure += USERID
 }

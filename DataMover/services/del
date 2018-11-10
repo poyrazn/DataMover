@@ -1,14 +1,16 @@
 # default: off
-# description:
-#
+# description: An xinetd service that deletes the specified files from the server upon request by clients.
+# Uses tcp.
 
-service del {
+service del
+{
     protocol       = tcp
     disable        = no
     port           = 4444
     flags          = REUSE
     socket_type    = stream
     user           = root
-    server         = server_xinetd_put.py
+    wait           = no
+    server         = /home/server/server_xinetd_del.py
     log_on_failure += USERID
 }

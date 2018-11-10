@@ -1,14 +1,16 @@
 # default: off
-# description:
+# description: An xinetd service to list the content of a directory to clients upon request using tcp protocol
 #
 
-service list {
+service list
+{
     protocol       = tcp
     disable        = no
     port           = 1111
     flags          = REUSE
     socket_type    = stream
     user           = root
-    server         =
+    wait           = no
+    server         = /home/server/server_xinetd_list.py
     log_on_failure += USERID
 }

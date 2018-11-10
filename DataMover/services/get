@@ -1,14 +1,16 @@
 # default: off
-# description:
+# description: An xinetd service to transfer files to clients upon request using tcp.
 #
 
-service get {
+service get
+{
     protocol       = tcp
     disable        = no
     port           = 3333
     flags          = REUSE
     socket_type    = stream
     user           = root
-    server         =
+    wait           = no
+    server         = /home/server/server_xinetd_get.py
     log_on_failure += USERID
 }
