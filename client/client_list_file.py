@@ -1,4 +1,4 @@
-#
+#!/usr/bin/env python
 # client_list_file
 # DataMover
 #

@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 #
 # server_xinetd_list
 # DataMover
