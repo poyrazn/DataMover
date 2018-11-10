@@ -11,6 +11,6 @@ service put
     socket_type    = stream
     user           = root
     wait           = no
-    server         = /home/server/server_xinetd_put.py
+    server         = /home/nehir/DataMover/server/server_xinetd_put.py
     log_on_failure += USERID
 }
