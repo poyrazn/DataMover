@@ -23,7 +23,7 @@ if __name__ == '__main__':
 
     if os.path.exists(filepath):
         with open(filepath) as f:
-            md5.update(f.read())
+            md5.update(f.read().encode('utf-8'))
         print('\033[93mFile' + filename + ' exists. Calculating MD5 checksum.\033[0m', flush=True)
         if clientmd5 == md5.digest():
             print('\033[92mFile ' + filename + ' is succesfully recorded. MD5 checksum passed.\033[0m', flush=True)
