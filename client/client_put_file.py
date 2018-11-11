@@ -10,6 +10,7 @@ import socket
 import os
 import sys
 import hashlib
+import pathlib
 
 
 HOST = 'localhost'
@@ -23,7 +24,7 @@ if __name__ == '__main__':
     if len(sys.argv) == 1:
         print('Please provide a file to be transferred.')
     else:
-        filename = sys.argv[1]
+        filename = pathlib.Path(sys.argv[1]).name
         filepath = os.getcwd() + '/' + filename
         md5 = hashlib.md5()
         filesize = os.path.getsize(filepath)
