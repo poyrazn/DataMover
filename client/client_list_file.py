@@ -20,8 +20,8 @@ sock.connect(ADDR)
 
 
 if __name__ == '__main__':
-    username = b'' + os.getlogin()
-    sock.send(username)
+    username = os.getlogin()
+    sock.send(username.encode())
     sock.shutdown(socket.SHUT_WR)
     data = sock.recv(BUFSIZE)
     print(data)
