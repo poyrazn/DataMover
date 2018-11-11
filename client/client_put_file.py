@@ -1,4 +1,4 @@
-#!/usr/bin/python3.6
+#!/usr/bin/python2.7
 #
 # client_put_file
 # DataMover
@@ -31,11 +31,11 @@ if __name__ == '__main__':
                 md5.update(content.encode('utf-8'))
             filesize = os.path.getsize(filepath)
             username = os.getlogin()
-            sock.send(username.encode('ascii'))
-            sock.send(filename.encode('ascii'))
+            sock.send(username)
+            sock.send(filename)
             sock.send(md5.digest())
-            sock.send(str(filesize).encode('ascii'))
-            sock.send(content.encode('utf-8'))
+            sock.send(str(filesize))
+            sock.send(content)
             sock.shutdown(socket.SHUT_WR)
             status = sock.recv(BUFSIZE)
             print(status)
