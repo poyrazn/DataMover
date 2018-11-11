@@ -7,7 +7,6 @@
 
 import socket
 import os
-import pickle
 
 
 #HOST = '10.0.2.15'
@@ -22,8 +21,7 @@ sock.connect(ADDR)
 
 if __name__ == '__main__':
     username = os.getlogin()
-    pickled_username = pickle.dumps(username, pickle.HIGHEST_PROTOCOL)
-    sock.send(pickled_username)
+    sock.send(username)
     sock.shutdown(socket.SHUT_WR)
     data = sock.recv(BUFSIZE)
     print(data)

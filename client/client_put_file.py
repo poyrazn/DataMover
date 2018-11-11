@@ -10,7 +10,7 @@ import socket
 import os
 import sys
 import hashlib
-import pickle
+
 
 HOST = 'localhost'
 PORT = 1111
