@@ -13,7 +13,7 @@ import os
 HOST = 'localhost'
 PORT = 1111
 ADDR = (HOST, PORT)
-BUFSIZE = 1024
+BUFSIZE = 4096
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sock.connect(ADDR)
 #machine = socket.gethostname()
