@@ -31,18 +31,13 @@ if __name__ == '__main__':
                 md5.update(content.encode('utf-8'))
             filesize = os.path.getsize(filepath)
             username = os.getlogin()
-            sock.send(username.encode('utf-8'))
-            sock.send(filename.encode('utf-8'))
+            sock.send(username.encode('ascii'))
+            sock.send(filename.encode('ascii'))
             sock.send(md5.digest())
-            sock.send(str(filesize).encode('utf-8'))
+            sock.send(str(filesize).encode('ascii'))
             sock.send(content.encode('utf-8'))
             sock.shutdown(socket.SHUT_WR)
             status = sock.recv(BUFSIZE)
             print(status)
         else:
             print('File does not exists.')
-
-
-
-
-
