@@ -21,7 +21,7 @@ if __name__ == '__main__':
     filesize = int(sys.stdin.readline().strip())
     content = sys.stdin.read()
 
-    print("File " + filename + " transmission for path " + filepath)
+    print("File " + filename + " transmission for path " + filepath, flush=True)
 
     """if os.path.exists(filepath):
         with open(filepath) as f:
