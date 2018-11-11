@@ -1,4 +1,4 @@
-#!/usr/bin/python3.6
+#!/usr/bin/python2.7
 #
 # client_list_file
 # DataMover

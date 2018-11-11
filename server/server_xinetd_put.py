@@ -1,4 +1,4 @@
-#!/usr/bin/python3.6
+#!/usr/bin/python2.7
 #
 # server_xinetd_put
 # DataMover
@@ -46,16 +46,3 @@ if __name__ == '__main__':
             print('\033[92mFile ' + filename + ' is succesfully recorded. MD5 checksum passed.\033[0m', flush=True)
         else:
             print('\033[91mTransmission failed. Retry recommended.\033[0m', flush=True)
-
-
-
-
-
-
-
-
-
-
-
-
-
