@@ -29,12 +29,13 @@ if __name__ == '__main__':
             with open(filepath) as f:
                 content = f.read()
                 md5.update(content.encode('utf-8'))
-            filesize = os.path.getsize(filepath)
-            username = os.getlogin()
-            sock.send(b''+username)
-            sock.send(b''+filename)
+            filesize = b'' + os.path.getsize(filepath)
+            username = b'' + os.getlogin()
+            fname = b'' + filename
+            sock.send(username)
+            sock.send(fname)
             sock.send(md5.digest())
-            sock.send(b''+str(filesize))
+            sock.send(filesize)
             sock.send(content)
             sock.shutdown(socket.SHUT_WR)
             status = sock.recv(BUFSIZE)
