@@ -18,7 +18,7 @@ if __name__ == '__main__':
     filename = sys.stdin.readline().strip()
     filepath = path + filename
     clientmd5 = sys.stdin.readline().strip()
-    filesize = sys.stdin.readline().strip()
+    filesize = int(sys.stdin.readline().strip())
     content = sys.stdin.read()
 
     if os.path.exists(filepath):

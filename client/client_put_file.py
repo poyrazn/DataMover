@@ -34,7 +34,7 @@ if __name__ == '__main__':
             sock.send(username)
             sock.send(filename)
             sock.send(md5.digest())
-            sock.send(filesize)
+            sock.send(str(filesize))
             sock.send(content)
             sock.shutdown(socket.SHUT_WR)
             status = sock.recv(BUFSIZE)
