@@ -1,4 +1,4 @@
-#!/usr/bin/python2.7
+#!/usr/bin/python3.6
 #
 # client_list_file
 # DataMover
@@ -20,8 +20,8 @@ sock.connect(ADDR)
 
 
 if __name__ == '__main__':
-    user = os.getlogin()
-    sock.send(user)
+    username = os.getlogin()
+    sock.sendmsg(username)
     sock.shutdown(socket.SHUT_WR)
     data = sock.recv(BUFSIZE)
     print(data)
