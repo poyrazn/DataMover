@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+#!/usr/bin/python2.7
+#
 # client_list_file
 # DataMover
 #
@@ -6,7 +7,7 @@
 
 import socket
 import os
-import sys
+
 
 #HOST = '10.0.2.15'
 HOST = 'localhost'
@@ -15,7 +16,7 @@ ADDR = (HOST, PORT)
 BUFSIZE = 1024
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sock.connect(ADDR)
-machine = socket.gethostname()
+#machine = socket.gethostname()
 
 
 if __name__ == '__main__':
