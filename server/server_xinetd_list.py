@@ -15,6 +15,7 @@ if __name__ == '__main__':
     if len(buffer):
         username += buffer
     path = '/home/DataCloud/' + username
+    print('Looking for directory:', username)
     if not os.path.isdir(path):
         os.mkdir(path)
         print('Data directory is created.')
