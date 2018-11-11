@@ -21,7 +21,7 @@ if __name__ == '__main__':
         sys.stdout.flush()
     else:
         if not os.listdir(path):
-            print('-' * 70 + '\n\033[0;31;40m There are no stored files\033[0;37;40m\n' + '-' * 70)
+            print('-' * 70 + '\n\033[91m There are no stored files\033[0m\n' + '-' * 70)
             sys.stdout.flush()
         else:
             os.system('ls -la ' + path)
