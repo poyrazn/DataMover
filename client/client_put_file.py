@@ -33,6 +33,8 @@ if __name__ == '__main__':
         sock.send(str(filesize))
         #sock.send(content)
         sock.shutdown(socket.SHUT_WR)
+        status = sock.recv(BUFSIZE)
+        print(status)
 
         """if os.path.exists(filepath):
             md5 = hashlib.md5()
@@ -41,7 +43,6 @@ if __name__ == '__main__':
                 md5.update(content.encode('utf-8'))
             
             
-            status = sock.recv(BUFSIZE)
-            print(status)
+            
         else:
             print('File does not exists.')"""
