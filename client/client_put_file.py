@@ -24,20 +24,24 @@ if __name__ == '__main__':
     else:
         filename = sys.argv[1]
         filepath = os.getcwd() + '/' + filename
-        if os.path.exists(filepath.encode()):
+        md5 = hashlib.md5()
+        filesize = os.path.getsize(filepath)
+        username = os.getlogin()
+        sock.send(username)
+        sock.send(filename)
+        sock.send(md5.digest())
+        sock.send(str(filesize))
+        #sock.send(content)
+        sock.shutdown(socket.SHUT_WR)
+
+        """if os.path.exists(filepath):
             md5 = hashlib.md5()
             with open(filepath) as f:
                 content = f.read()
                 md5.update(content.encode('utf-8'))
-            filesize = os.path.getsize(filepath)
-            username = os.getlogin()
-            sock.send(username)
-            sock.send(filename)
-            sock.send(md5.digest())
-            sock.send(str(filesize))
-            sock.send(content)
-            sock.shutdown(socket.SHUT_WR)
+            
+            
             status = sock.recv(BUFSIZE)
             print(status)
         else:
-            print('File does not exists.')
+            print('File does not exists.')"""
