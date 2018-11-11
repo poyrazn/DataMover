@@ -1,4 +1,4 @@
-#!/usr/bin/python2.7
+#!/usr/bin/python3.6
 #
 # client_put_file
 # DataMover
@@ -24,7 +24,7 @@ if __name__ == '__main__':
     else:
         filename = sys.argv[1]
         filepath = os.getcwd() + '/' + filename
-        if os.path.exists(filepath):
+        if os.path.exists(filepath.encode()):
             md5 = hashlib.md5()
             with open(filepath) as f:
                 content = f.read()
