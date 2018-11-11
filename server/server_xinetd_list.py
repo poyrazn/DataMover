@@ -8,11 +8,19 @@
 import os
 import sys
 
-message = 'Message is received.'
-buf = sys.stdin.readline().strip()
-received = ''
-if len(buf):
-	received += buf
-print(message) # Write to the standard output.
-print('Message sent is: ' + received)
-sys.stdout.flush() # Flush the standard output, so the message is sent.
+if __name__ == '__main__':
+
+    buffer = sys.stdin.readline().strip()
+    username = ''
+    if len(buffer):
+        username += buffer
+    path = '/home/DataCloud/' + username
+    if not os.path.isdir(path):
+        os.mkdir(path)
+        print('Data directory is created.')
+    else:
+        if not os.listdir(path):
+            print('-' * 70 + '\n\033[0;31;40m There are no stored files\033[0;37;40m\n' + '-' * 70)
+        else:
+            os.system('ls -la ' + path)
+    sys.stdout.flush() # Flush the standard output, so the message is sent.
