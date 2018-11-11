@@ -21,7 +21,7 @@ machine = socket.gethostname()
 if __name__ == '__main__':
     user = os.getlogin()
     sock.send(user)
-#    sock.shutdown(socket.SHUT_WR)
+    sock.shutdown(socket.SHUT_WR)
     data = sock.recv(BUFSIZE)
     print(data)
 
