@@ -11,6 +11,7 @@ import time
 import sys
 import hashlib
 
+
 if __name__ == '__main__':
     md5 = hashlib.md5()
     username = sys.stdin.readline().strip()
