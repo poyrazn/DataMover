@@ -5,49 +5,62 @@
 #
 # Created by Nehir Poyraz on 11.11.2018
 
-from __future__ import print_function
+from shared import shared
 import os
 import time
 import sys
 import hashlib
 import pickle
 
+# already exists = 200 (OK)
+# created = 201	 (CREATED)
+# corrputed = 409 	(CONFLICT) 
+# not found = 404  (NOTFOUND)
+
+
+def env(request):
+global client
+global path
+global filepath
+
+
+
+
+def check(request):
+	path = '/home/DataCloud/' + request['username'] + '/'
+	if os.path.exists(path + request['filename']):
+		md5, filesize = shared.checksum(filepath, 'check')
+		if request['md5'] == md5 and request['filesize'] == filesize:
+			reply = {'status':200, 'message':'File already exists.' }	#do not transfer the file
+		else:
+			reply = {'status':409, 'message':'File is either corrupted or outdated. Requested transmission...' }	# transfer
+	else:
+		reply = {'status':404, 'message':'File not found. Requested transmission...'}	# transfer
+	
+	shared.send(reply)
+	return reply
+		
+
+def transfer(request):
+	filepath = '/home/DataCloud/' + request['username'] + '/' + request['filename']
+	with open(filepath, 'wb') as f:
+		f.write(request['data'])
+	md5, filesize = shared.checksum(filepath, 'check')
+	if request['md5'] == md5 and request['filesize'] == filesize:
+		reply = {'status': 201, 'message': request['filename']+ ' is succesfully transferred.'}
+	else:
+		reply = {'status': 500, 'message': 'Transmission failed, retry recommended.'}
+		
+	return reply
+
+
 if __name__ == '__main__':
-    md5 = hashlib.md5()
-    pickled = sys.stdin.read()
-    data = pickle
-    path = '/home/DataCloud/' + data['client'] + '/'
-    filename = sys.stdin.readline().strip()
-    filepath = path + filename
-    #clientmd5 = sys.stdin.readline().strip()
-    #filesize = int(sys.stdin.readline().strip())
-    #content = sys.stdin.read()
+	request = shared.receive()
+	status = shared(request)
+	if reply['status'] != 200:
+		request = shared.receive()
+		reply = transfer(request) 
 
-    print("File " + filename + " transmission for path " + filepath)
-    sys.stdout.flush()
-
-    """if os.path.exists(filepath):
-        with open(filepath) as f:
-            md5.update(f.read().encode('utf-8'))
-        print('\033[93mFile' + filename + ' exists. Calculating MD5 checksum.\033[0m', flush=True)
-        if clientmd5 == md5.digest():
-            print('\033[92mFile ' + filename + ' is succesfully recorded. MD5 checksum passed.\033[0m', flush=True)
-        else:
-            print('\033[91mFile is either corrupted, interrupted or outdated.\033[0m', flush=True)
-
-    else:
-        print('\033[94m' + filename + ' is being stored...', flush=True)
-        starttime = time.ctime()
-        f = open(filepath, 'w')
-        endtime = time.ctime()
-        for i in range(100):
-            print ('=', end='', flush=True)
-        print('100 % Complete! (', endtime-starttime, 'secs )\033[0m', flush=True)
-        f.write(content)
-        f.close()
-        with open(filepath) as f:
-            md5.update(f.read())
-        if clientmd5 == md5.digest():
-            print('\033[92mFile ' + filename + ' is succesfully recorded. MD5 checksum passed.\033[0m', flush=True)
-        else:
-            print('\033[91mTransmission failed. Retry recommended.\033[0m', flush=True)"""
+	
+		
+	
