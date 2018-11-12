@@ -18,14 +18,14 @@ if __name__ == '__main__':
     path = '/home/DataCloud/' + username + '/'
     filename = sys.stdin.readline().strip()
     filepath = path + filename
-    clientmd5 = sys.stdin.readline().strip()
-    filesize = int(sys.stdin.readline().strip())
-    content = sys.stdin.read()
+    #clientmd5 = sys.stdin.readline().strip()
+    #filesize = int(sys.stdin.readline().strip())
+    #content = sys.stdin.read()
 
     print("File " + filename + " transmission for path " + filepath)
     sys.stdout.flush()
 
-    if os.path.exists(filepath):
+    """if os.path.exists(filepath):
         with open(filepath) as f:
             md5.update(f.read().encode('utf-8'))
         print('\033[93mFile' + filename + ' exists. Calculating MD5 checksum.\033[0m', flush=True)
@@ -49,4 +49,4 @@ if __name__ == '__main__':
         if clientmd5 == md5.digest():
             print('\033[92mFile ' + filename + ' is succesfully recorded. MD5 checksum passed.\033[0m', flush=True)
         else:
-            print('\033[91mTransmission failed. Retry recommended.\033[0m', flush=True)
+            print('\033[91mTransmission failed. Retry recommended.\033[0m', flush=True)"""
