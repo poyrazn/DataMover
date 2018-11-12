@@ -31,12 +31,14 @@ if __name__ == '__main__':
         username = os.getlogin()
         sock.send(username)
         sock.send(filename)
-        sock.send(md5.digest())
+        status = sock.recv(BUFSIZE)
+        print(status)
+        """sock.send(md5.digest())
         sock.send(str(filesize))
         #sock.send(content)
         sock.shutdown(socket.SHUT_WR)
         status = sock.recv(BUFSIZE)
-        print(status)
+        print(status)"""
 
         """if os.path.exists(filepath):
             md5 = hashlib.md5()

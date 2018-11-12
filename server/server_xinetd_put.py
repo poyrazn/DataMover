@@ -17,6 +17,7 @@ if __name__ == '__main__':
     username = sys.stdin.readline().strip()
     path = '/home/DataCloud/' + username + '/'
     filename = sys.stdin.readline().strip()
+    print('File received ' + filename, flush=True)
     filepath = path + filename
     clientmd5 = sys.stdin.readline().strip()
     filesize = int(sys.stdin.readline().strip())
