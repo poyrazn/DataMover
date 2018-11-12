@@ -10,12 +10,13 @@ import os
 import time
 import sys
 import hashlib
-
+import pickle
 
 if __name__ == '__main__':
     md5 = hashlib.md5()
-    username = sys.stdin.readline().strip()
-    path = '/home/DataCloud/' + username + '/'
+    pickled = sys.stdin.read()
+    data = pickle
+    path = '/home/DataCloud/' + data['client'] + '/'
     filename = sys.stdin.readline().strip()
     filepath = path + filename
     #clientmd5 = sys.stdin.readline().strip()

@@ -17,6 +17,7 @@ import socket
 import os
 import sys
 import hashlib
+import pickle
 
 HOST = 'localhost'
 PORT = 2222
@@ -38,11 +39,16 @@ if __name__ == '__main__':
                 md5.update(content.encode('utf-8'))
             filesize = os.path.getsize(filepath)
             username = os.getlogin()
-            sock.send(username)
-            #sock.send(filename)
-            #sock.send(md5.digest())
-            #sock.send(str(filesize))
-            #sock.send(content)
+            data = {
+                'client': username,
+                'filename': filename,
+                'md5': 1245,
+                'filesize': filesize,
+                'content': content
+            }
+            pickled = pickle.dumps(data, pickle.HIGHEST_PROTOCOL)
+            pickled += b'\n'
+            sock.send(pickled)
             sock.shutdown(socket.SHUT_WR)
             status = sock.recv(BUFSIZE)
             print(status)
