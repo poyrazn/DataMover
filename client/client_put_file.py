@@ -35,7 +35,7 @@ if __name__ == '__main__':
             md5 = hashlib.md5()
             with open(filepath) as f:
                 content = f.read()
-                md5.update(content)
+                md5.update(content.encode('utf-8'))
             filesize = os.path.getsize(filepath)
             username = os.getlogin()
             sock.send(username)
