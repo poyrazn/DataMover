@@ -1,23 +1,37 @@
+#!/usr/bin/python2.7
+
+import hashlib
+import pickle
+import sys
+import socket
+
+BUFSIZE = 4096
+
 def receive(sock=None):
 	if sock:
-		pickled = b'' + sock.recv(BUFSIZE)
-		sock.shutdown(socket.SHUT_WR)
-        reply = pickle.loads(pickled)
-        return reply
-    else:
+		pickled = sock.recv(BUFSIZE)
+		pickled = b''+pickled
+		reply = pickle.loads(pickled)
+		print('Client Received')
+		return reply
+	else:
 		pickled = sys.stdin.read()
 		request = pickle.loads(pickled)
+		print('Server Received')
+		print(request)
 		return request
 		
 def send(data, sock=None):
+	pickled = pickle.dumps(data, pickle.HIGHEST_PROTOCOL)
 	if sock:
-		pickled = pickle.dumps(data, pickle.HIGHEST_PROTOCOL)
 		pickled += b'\n'
 		sock.send(pickled)
 		sock.shutdown(socket.SHUT_WR)
+		print('Client Sent')
 	else:
 		sys.stdout.write(pickled)
 		sys.stdout.flush()
+		print('Server Sent')
 	
 
 def checksum(path, opt):
