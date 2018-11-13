@@ -5,14 +5,6 @@
 #
 # Created by Nehir Poyraz on 11.11.2018
 
-#!/usr/bin/python2.7
-#
-# client_put_file
-# DataMover
-#
-# Created by Nehir Poyraz on 11.11.2018
-
-
 import socket
 import os
 import sys
@@ -20,7 +12,7 @@ import hashlib
 import pickle
 
 
-BUFSIZE = 8192
+BUFSIZE = 4096
 
 RED = '\033[91m'	# fail
 GREEN = '\033[92m'	# success
@@ -64,12 +56,11 @@ def checksum(path, opt):
 		return content, md5.hexdigest(), len(content)
 
 	
-def check(path, sock):
+def check(path):
 	md5, filesize = checksum(path, 'check')
 	request = {'username': os.getlogin(), 'filename': sys.argv[1],'md5': md5, 'filesize': filesize}
 	print(request)
 	print('Client Check')
-	#request = {'username': 'nehir', 'filename': 'hello.txt','md5': 123, 'filesize': filesize}
 	return request
 	
 
@@ -97,8 +88,9 @@ if __name__ == '__main__':
 			print(RED +'File does not exists. Please provide an existing filename.'+ END)
 		else:
 			sock = newsocket()
-			md5, filesize = checksum(filepath, 'check')
-			request = {'username': os.getlogin(), 'filename': sys.argv[1],'md5': md5, 'filesize': filesize}
+			#md5, filesize = checksum(filepath, 'check')
+			#request = {'username': os.getlogin(), 'filename': sys.argv[1],'md5': md5, 'filesize': filesize}
+			request = check(filepath)
 			print(request)
 			print('Client Check')
 			send(request, sock)
@@ -113,7 +105,7 @@ if __name__ == '__main__':
 			else:
 				print(YELLOW + reply['message'] + END)
         	#read local
-"
+
         	
             
 
