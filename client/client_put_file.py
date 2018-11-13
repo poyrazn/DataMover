@@ -57,12 +57,14 @@ def checksum(path, opt):
 
 	
 def check(path):
-	md5, filesize = checksum(path, 'check')
-	request = {'type': 'check', 'username': os.getlogin(), 'filename': sys.argv[1],'md5': md5, 'filesize': filesize}
-	print(request)
-	print('Client Check')
-	return request
-	
+	try:
+		os.path.exists(path)
+		md5, filesize = checksum(path, 'check')
+		request = {'type': 'check', 'username': os.getlogin(), 'filename': sys.argv[1],'md5': md5, 'filesize': filesize}
+		return request
+	except:
+		print(RED +'File does not exists. Please provide an existing filename.'+ END)
+		sys.exit(0)
 
 def transfer(path, sock):
 	data, md5, filesize = checksum(path, 'transfer')
@@ -77,38 +79,25 @@ if __name__ == '__main__':
 	else:
 		filename = sys.argv[1]
 		filepath = os.getcwd() + '/' + filename
-		try:
-			os.path.exists(filepath)
-		except:
-			print(RED +'File does not exists. Please provide an existing filename.'+ END)
+		request = check(filepath)
+		sock = newsocket()
+		send(request, sock)
+		reply = receive(sock)
+		sock.close()
+		if reply['status'] == 200:
+			print(GREEN + reply['message'] + END)
 		else:
-			checksock = newsocket()
-			request = check(filepath)
-			print(request)
-			print('Client Check')
-			send(request, checksock)
-			print('Client sent')
-			print(request)
-			reply = receive(checksock)
-			checksock.close()
-			print('Client received')
-			print(reply)
+			print(YELLOW + reply['message'] + END)
+			print('Transfer protocol started')
+			sock = newsocket()
+			request = transfer(filepath, sock)
+			send(request, sock)
+			reply = receive(sock)
+			sock.close()
 			if reply['status'] == 200:
 				print(GREEN + reply['message'] + END)
 			else:
-				print(YELLOW + reply['message'] + END)
-				print('Transfer protocol started')
-				transfersock = newsocket()
-				request = transfer(filepath, transfersock)
-				print('Request ready')
-				print(request)
-				send(request, transfersock)
-				reply = receive(transfersock)
-				if reply['status'] == 200:
-					print(GREEN + reply['message'] + END)
-				else:
-					print(RED + reply['message'] + END)
-        	#read local
+				print(RED + reply['message'] + END)
 
         	
             
