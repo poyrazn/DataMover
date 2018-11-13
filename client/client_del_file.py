@@ -23,7 +23,7 @@ END = '\033[0m'
 
 def newsocket():
 	HOST = 'localhost'
-	PORT = 2222
+	PORT = 4444
 	ADDR = (HOST, PORT)
 	newsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	newsocket.connect(ADDR)
