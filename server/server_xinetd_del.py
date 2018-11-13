@@ -50,6 +50,7 @@ def check(request):
 	if os.path.exists(filepath):
 		md5, filesize = checksum(filepath, 'check')
 		if request['md5'] == md5 and request['filesize'] == filesize:
+			os.remove(filepath)
 			reply = {'status': 200, 'message': 'File succesfully deleted' }	#do not transfer the file
 		else:
 			reply = {'status': 403, 'message': 'File is found but is either changed or corrupted. Unable to authenticate.'}	# transfer
