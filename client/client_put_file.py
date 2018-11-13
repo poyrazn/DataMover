@@ -39,7 +39,7 @@ def send(request, sock):
 	
 def receive(sock):
 	pickled = sock.recv(BUFSIZE)
-	pickled = b''+pickled
+	pickled = b'' + pickled
 	reply = pickle.loads(pickled)
 	sock.shutdown(socket.SHUT_RD)
 	return reply
@@ -78,8 +78,8 @@ if __name__ == '__main__':
 		print('Please provide a file to transfer.')
 	else:
 		filename = sys.argv[1]
-		filepath = os.getcwd() + '/' + filename
-		request = check(filepath)
+		path = os.getcwd() + '/' + filename
+		request = check(path)
 		sock = newsocket()
 		send(request, sock)
 		reply = receive(sock)
@@ -90,7 +90,7 @@ if __name__ == '__main__':
 			print(YELLOW + reply['message'] + END)
 			print('Transfer protocol started')
 			sock = newsocket()
-			request = transfer(filepath, sock)
+			request = transfer(path, sock)
 			send(request, sock)
 			reply = receive(sock)
 			sock.close()
