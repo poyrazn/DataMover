@@ -1,6 +1,6 @@
 #!/usr/bin/python2.7
 #
-# server_xinetd_put
+# server_xinetd_del
 # DataMover
 #
 # Created by Nehir Poyraz on 11.11.2018
@@ -50,36 +50,18 @@ def check(request):
 	if os.path.exists(filepath):
 		md5, filesize = checksum(filepath, 'check')
 		if request['md5'] == md5 and request['filesize'] == filesize:
-			reply = {'status': 200, 'message': 'File already exists.' }	#do not transfer the file
+			reply = {'status': 200, 'message': 'File succesfully deleted' }	#do not transfer the file
 		else:
-			reply = {'status': 409, 'message': 'File is either corrupted or outdated. Requested transmission...'}	# transfer
+			reply = {'status': 403, 'message': 'File is found but is either changed or corrupted. Unable to authenticate.'}	# transfer
 	else:
-		reply = {'status': 404, 'message': 'File not found. Requested transmission...'}	# transfer
+		reply = {'status': 404, 'message': 'File not found.'}	# transfer
 
-	return reply
-
-
-def transfer(request):
-	path = '/home/DataCloud/' + request['username'] + '/'
-	filepath = path + request['filename']
-	with open(filepath, 'wb') as f:
-		f.write(request['data'])
-	md5, filesize = checksum(filepath, 'check')
-	if request['md5'] == md5 and request['filesize'] == filesize:
-		reply = {'status': 200, 'message': 'File is succesfully transferred' }
-	else:
-		reply = {'status': 500, 'message': 'Transmission failed, retry recommended.'}
 	return reply
 	
+
 if __name__ == '__main__':
 
 	request = receive()
-	if request['type'] == 'check':
-		reply = check(request)
-	if request['type'] == 'transfer':
-		reply = transfer(request)
+	reply = check(request)
 	send(reply)
-	
-	
-	
 
