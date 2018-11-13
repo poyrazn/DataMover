@@ -93,16 +93,21 @@ if __name__ == '__main__':
 			checksock.close()
 			print('Client received')
 			print(reply)
-			if reply['status'] == '200':
+			if reply['status'] == 200:
 				print(GREEN + reply['message'] + END)
 			else:
 				print(YELLOW + reply['message'] + END)
 				print('Transfer protocol started')
 				transfersock = newsocket()
 				request = transfer(filepath, transfersock)
+				print('Request ready')
+				print(request)
 				send(request, transfersock)
 				reply = receive(transfersock)
-				print(reply['message'])
+				if reply['status'] == 200:
+					print(GREEN + reply['message'] + END)
+				else:
+					print(RED + reply['message'] + END)
         	#read local
 
         	
