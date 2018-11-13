@@ -20,7 +20,7 @@ import hashlib
 import pickle
 
 
-BUFSIZE = 2048
+BUFSIZE = 8192
 
 RED = '\033[91m'	# fail
 GREEN = '\033[92m'	# success
@@ -41,35 +41,23 @@ def newsocket():
 def send(request, sock):
 	pickled = pickle.dumps(request, pickle.HIGHEST_PROTOCOL)
 	pickled += b'\n'
-	print('pickling')
-	print(b''+pickled)
 	sock.send(pickled)
 	sock.shutdown(socket.SHUT_WR)
 
 	
-
 def receive(sock):
-	"""pickled = []
-	while True:
-		buf = sock.recv(BUFSIZE)
-		pickled.append(buf)
-		if len(buf) < BUFSIZE:
-			break"""
 	pickled = sock.recv(BUFSIZE)
 	pickled = b''+pickled
 	reply = pickle.loads(pickled)
-	print('reply')
-	print(reply)
 	sock.shutdown(socket.SHUT_RD)
 	return reply
-	
 	
 
 def checksum(path, opt):
 	md5 = hashlib.md5()
 	with open(path, 'r') as f:
 		content = f.read()
-	md5.update(content.encode())
+	md5.update(content.encode('utf-8'))
 	if opt == 'check':
 		return md5.hexdigest(), len(content)
 	if opt == 'transfer':
@@ -96,8 +84,6 @@ def transfer(path, sock):
 
 
 
-
-
 if __name__ == '__main__':
 	
 	if len(sys.argv) == 1:
@@ -111,30 +97,23 @@ if __name__ == '__main__':
 			print(RED +'File does not exists. Please provide an existing filename.'+ END)
 		else:
 			sock = newsocket()
-			request = check(filepath, sock)
-			#request = {'username': 'nehir', 'filename': 'hello.txt','md5': 123, 'filesize': 123}
+			md5, filesize = checksum(filepath, 'check')
+			request = {'username': os.getlogin(), 'filename': sys.argv[1],'md5': md5, 'filesize': filesize}
 			print(request)
-			#send(request, sock)
-			print('Client sent')
+			print('Client Check')
 			send(request, sock)
+			print('Client sent')
+			print(request)
 			reply = receive(sock)
-			#reply = sock.recv(BUFSIZE)
 			print('Client received')
 			print(reply)
 			
-        	#if reply['status'] == 200:
-        		#print(GREEN + reply['message'] + END)
-        		#sys.exit(0)
-        	#else:
-        		#print(YELLOW + reply['message'] + END)
+			if reply['status'] == '200':
+				print(GREEN + reply['message'] + END)
+			else:
+				print(YELLOW + reply['message'] + END)
         	#read local
-"""sock = newsocket()
-        	reply = transfer(filepath, sock)
-        	if reply['status'] == 200:
-        		print(GREEN + reply['message'] + END)
-        	else:
-        		print(RED + reply['message'] + END)
-        	sys.exit(0)"""
+"
         	
             
 
