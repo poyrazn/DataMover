@@ -58,21 +58,16 @@ def checksum(path, opt):
 	
 def check(path):
 	md5, filesize = checksum(path, 'check')
-	request = {'username': os.getlogin(), 'filename': sys.argv[1],'md5': md5, 'filesize': filesize}
+	request = {'type': 'check', 'username': os.getlogin(), 'filename': sys.argv[1],'md5': md5, 'filesize': filesize}
 	print(request)
 	print('Client Check')
 	return request
 	
 
 def transfer(path, sock):
-	print('transfer')
 	data, md5, filesize = checksum(path, 'transfer')
-	request = {'username': os.getlogin(), 'filename': sys.argv[1], 'data' : b'' + data , 'md5': b'' + md5, 'filesize': filesize}
-	send(request, sock)
-	reply = receive(sock)
-	sock.close()
-	return reply
-
+	request = {'type': 'transfer','username': os.getlogin(), 'filename': sys.argv[1], 'md5': md5, 'filesize': filesize , 'data' : data}
+	return request
 
 
 if __name__ == '__main__':
@@ -87,23 +82,27 @@ if __name__ == '__main__':
 		except:
 			print(RED +'File does not exists. Please provide an existing filename.'+ END)
 		else:
-			sock = newsocket()
-			#md5, filesize = checksum(filepath, 'check')
-			#request = {'username': os.getlogin(), 'filename': sys.argv[1],'md5': md5, 'filesize': filesize}
+			checksock = newsocket()
 			request = check(filepath)
 			print(request)
 			print('Client Check')
-			send(request, sock)
+			send(request, checksock)
 			print('Client sent')
 			print(request)
-			reply = receive(sock)
+			reply = receive(checksock)
+			checksock.close()
 			print('Client received')
 			print(reply)
-			
 			if reply['status'] == '200':
 				print(GREEN + reply['message'] + END)
 			else:
 				print(YELLOW + reply['message'] + END)
+				print('Transfer protocol started')
+				transfersock = newsocket()
+				request = transfer(filepath, transfersock)
+				send(request, transfersock)
+				reply = receive(transfersock)
+				print(reply['message'])
         	#read local
 
         	
