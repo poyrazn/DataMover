@@ -55,22 +55,29 @@ def check(request):
 			reply = {'status': 409, 'message': 'File is either corrupted or outdated. Requested transmission...', 'md5': md5 }	# transfer
 	else:
 		reply = {'status': 404, 'message': 'File not found. Requested transmission...'}	# transfer
-		
+
 	return reply
 
+
+def transfer(request):
+	path = '/home/DataCloud/' + request['username'] + '/'
+	filepath = path + request['filename']
+	with open(filepath, 'w') as f:
+		f.write(request['data'])
+	md5, filesize = checksum(filepath, 'check')
+	if request['md5'] == md5 and request['filesize'] == filesize:
+		reply = {'status': 201, 'message':  'File is succesfully transferred.'}
+	else:
+		reply = {'status': 500, 'message': 'Transmission failed, retry recommended.'}
+	return reply
+	
 if __name__ == '__main__':
 
 	request = receive()
-	path = '/home/DataCloud/' + request['username'] + '/'
-	filepath = path + request['filename']
-	if os.path.exists(filepath):
-		md5, filesize = checksum(filepath, 'check')
-		if request['md5'] == md5 and request['filesize'] == filesize:
-			reply = {'status': 200, 'message': 'File already exists.' }	#do not transfer the file
-		else:
-			reply = {'status': 409, 'message': 'File is either corrupted or outdated. Requested transmission...'}	# transfer
-	else:
-		reply = {'status': 404, 'message': 'File not found. Requested transmission...'}	# transfer
+	if request['type'] == 'check':
+		reply = check(request)
+	if request['type'] == 'transfer':
+		reply = check(request)
 	send(reply)
 	
 	
