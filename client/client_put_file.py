@@ -45,59 +45,52 @@ def receive(sock):
 	return reply
 	
 
-def checksum(path, opt):
+def checksum(path):
 	md5 = hashlib.md5()
 	with open(path, 'r') as f:
 		content = f.read()
 	md5.update(content.encode('utf-8'))
-	if opt == 'check':
-		return md5.hexdigest(), len(content)
-	if opt == 'transfer':
-		return content, md5.hexdigest(), len(content)
+	return content, md5.hexdigest(), len(content)
 
 	
-def check(path):
-	try:
-		os.path.exists(path)
-		md5, filesize = checksum(path, 'check')
-		request = {'type': 'check', 'username': os.getlogin(), 'filename': sys.argv[1],'md5': md5, 'filesize': filesize}
-		return request
-	except:
-		print(RED +'File does not exists. Please provide an existing filename.'+ END)
+def request(File, mode):
+	if os.path.exists(File):
+		data, md5, filesize = checksum(File)
+		if mode == 'check':
+			request =  {'type': mode, 'username': os.getlogin(), 'filename': sys.argv[1],'md5': md5, 'filesize': filesize}
+		if mode == 'transfer':
+			request =  {'type': mode,'username': os.getlogin(), 'filename': sys.argv[1], 'md5': md5, 'filesize': filesize , 'data' : data}
+		sock = newsocket()
+		send(request, sock)
+		reply = receive(sock)
+		sock.close()
+	else:
+		print(RED + 'File does not exists. Please provide an existing filename.' + END)
 		sys.exit(0)
-
-def transfer(path, sock):
-	data, md5, filesize = checksum(path, 'transfer')
-	request = {'type': 'transfer','username': os.getlogin(), 'filename': sys.argv[1], 'md5': md5, 'filesize': filesize , 'data' : data}
-	return request
-
+	return reply
+	
 
 if __name__ == '__main__':
 	
 	if len(sys.argv) == 1:
 		print('Please provide a file to transfer.')
 	else:
-		filename = sys.argv[1]
-		path = os.getcwd() + '/' + filename
-		request = check(path)
-		sock = newsocket()
-		send(request, sock)
-		reply = receive(sock)
-		sock.close()
+		File = os.getcwd() + '/' + sys.argv[1]
+		reply = request(File, 'check')
+		if reply['status'] == 200:
+			print(GREEN + reply['message'] + END)
+			sys.exit(0)
+		elif reply['status'] == 404:
+			print(RED + reply['message'] + END)
+		else:
+			print(YELLOW + reply['message'] + END)
+		print('Transfer protocol started')
+		reply = request(File, 'transfer', sock)
 		if reply['status'] == 200:
 			print(GREEN + reply['message'] + END)
 		else:
-			print(YELLOW + reply['message'] + END)
-			print('Transfer protocol started')
-			sock = newsocket()
-			request = transfer(path, sock)
-			send(request, sock)
-			reply = receive(sock)
-			sock.close()
-			if reply['status'] == 200:
-				print(GREEN + reply['message'] + END)
-			else:
-				print(RED + reply['message'] + END)
+			print(RED + reply['message'] + END)
+		
 
         	
             
