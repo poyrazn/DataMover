@@ -11,7 +11,7 @@ import logging
 import pickle
 
 
-FORMAT ='%(asctime)-15s | %(levelname)s: %(message)s'
+FORMAT ='%(asctime)-15s | %(levelname)s: LIST %(message)s'
 logging.basicConfig(filename='client.log', level=logging.DEBUG, format=FORMAT, datefmt='%m/%d/%Y %H:%M:%S')
 logger = logging.getLogger(__name__)
 
@@ -57,7 +57,7 @@ def check(reply):
 		print(reply)
 
 sock = connect()
-logger.info('PUT Connected to server.')
+logger.info('Connected to server.')
 username = os.getlogin()
 sock.send(username)
 sock.shutdown(socket.SHUT_WR)

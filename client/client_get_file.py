@@ -10,8 +10,11 @@ import os
 import sys
 import hashlib
 import pickle
+import logging
 
-
+FORMAT ='%(asctime)-15s | %(levelname)s: GET %(message)s'
+logging.basicConfig(filename='client.log', level=logging.DEBUG, format=FORMAT, datefmt='%m/%d/%Y %H:%M:%S')
+logger = logging.getLogger(__name__)
 
 RED = '\033[91m'	# fail
 GREEN = '\033[92m'	# success
@@ -29,6 +32,7 @@ ADDR = (HOST, PORT)
 def connect():
 	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	sock.connect(ADDR)
+	logger.info('Connected to server.')
 	return sock
 
 
@@ -81,13 +85,16 @@ if __name__ == '__main__':
 		File = os.getcwd() + '/' + sys.argv[1]
 		reply = request(sys.argv[1])
 		if check(reply):
-			with open(File, 'wb') as f:
+			with open(File, 'w') as f:
 				f.write(reply['data'])
 			md5, filesize = checksum(File)
-			if reply['md5'] == md5 and reply['filesize'] == filesize:
+			if reply['md5'] == str(md5) and reply['filesize'] == str(filesize):
 				print(GREEN + 'File is succesfully transferred.' + END)
+				logger.info(sys.argv[1] + ' File is succesfully transferred.')
 			else:
-				print(RED + 'Contents may be corrupted, retry recommended.' + END)
+				print(str(reply['md5']) +  ' ' + str(md5) + ' ' + str(reply['filesize']) + ' ' + str(filesize))
+				print('Transmission failed.')
+				logger.error(sys.argv[1] + ' Transmission failed.')
 				
 			
 		

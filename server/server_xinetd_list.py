@@ -10,7 +10,7 @@ import os
 import sys
 import logging
 
-FORMAT ='%(asctime)-15s | %(levelname)s: %(message)s'
+FORMAT ='%(asctime)-15s | %(levelname)s: LIST %(message)s'
 logging.basicConfig(filename='home/DataCloud/server.log', level=logging.DEBUG, format=FORMAT, datefmt='%m/%d/%Y %H:%M:%S')
 logger = logging.getLogger(__name__)
 

@@ -11,12 +11,16 @@ import time
 import sys
 import hashlib
 import pickle
-
+import logging
 
 # already exists = 200 (OK)
 # created = 201	 (CREATED)
 # corrputed = 409 	(CONFLICT) 
 # not found = 404  (NOTFOUND)
+
+FORMAT ='%(asctime)-15s | %(levelname)s: PUT %(message)s'
+logging.basicConfig(filename='home/DataCloud/server.log', level=logging.DEBUG, format=FORMAT, datefmt='%m/%d/%Y %H:%M:%S')
+logger = logging.getLogger(__name__)
 
 def receive():
 	pickled = sys.stdin.read()
@@ -51,7 +55,7 @@ def reply(request):
 			reply = {'status': 404, 'message': 'File not found. Requested transmission...'}
 	
 	if request['type'] == 'transfer':
-		with open(File, 'wb') as f:
+		with open(File, 'w') as f:
 			f.write(request['data'])
 		md5, filesize = checksum(File)
 		if request['md5'] == md5 and request['filesize'] == filesize:
@@ -59,6 +63,7 @@ def reply(request):
 		else:
 			reply = {'status': 500, 'message': 'Transmission failed, retry recommended.'}
 	send(reply)
+	logger.info(request['filename'] + ' ' +  reply['message'])
 
 	
 if __name__ == '__main__':

@@ -11,7 +11,11 @@ import time
 import sys
 import hashlib
 import pickle
+import logging
 
+FORMAT ='%(asctime)-15s | %(levelname)s: DEL %(message)s'
+logging.basicConfig(filename='home/DataCloud/server.log', level=logging.DEBUG, format=FORMAT, datefmt='%m/%d/%Y %H:%M:%S')
+logger = logging.getLogger(__name__)
 
 # already exists = 200 (OK)
 # created = 201	 (CREATED)
@@ -56,7 +60,7 @@ def check(request):
 			reply = {'status': 403, 'message': 'File is found but is either changed or corrupted. Unable to authenticate.'}	# transfer
 	else:
 		reply = {'status': 404, 'message': 'File not found.'}	# transfer
-
+	logger.info(request['filename'] + ' ' +  reply['message'])
 	return reply
 	
 

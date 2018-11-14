@@ -10,7 +10,11 @@ import os
 import sys
 import hashlib
 import pickle
+import logging
 
+FORMAT ='%(asctime)-15s | %(levelname)s: PUT %(message)s'
+logging.basicConfig(filename='client.log', level=logging.DEBUG, format=FORMAT, datefmt='%m/%d/%Y %H:%M:%S')
+logger = logging.getLogger(__name__)
 
 RED = '\033[91m'	# fail
 GREEN = '\033[92m'	# success
@@ -71,15 +75,18 @@ def request(File, mode):
 def check(reply):
 	if reply['status'] == 200:
 		print(GREEN + reply['message'] + END)
+		logger.error(sys.argv[1] + ' ' + reply['message'])
 		sys.exit(0)
 	else:
 		if reply['status'] == 404:
 			print(RED + reply['message'] + END)
 		elif reply ['status'] == 500:
 			print(RED + reply['message'] + END)
+			logger.error(sys.argv[1] + ' Transfer failed.')
 			sys.exit(0)
 		else:
 			print(YELLOW + reply['message'] + END)
+		logger.error(sys.argv[1] + ' ' + reply['message'])
 		return True
 		
 

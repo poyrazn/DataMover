@@ -10,7 +10,12 @@ import os
 import sys
 import hashlib
 import pickle
+import logging
 
+
+FORMAT ='%(asctime)-15s | %(levelname)s: DEL %(message)s'
+logging.basicConfig(filename='client.log', level=logging.DEBUG, format=FORMAT, datefmt='%m/%d/%Y %H:%M:%S')
+logger = logging.getLogger(__name__)
 
 BUFSIZE = 4096
 
@@ -21,12 +26,14 @@ YELLOW = '\033[93m'	# request sent
 END = '\033[0m'
 
 
+
 def newsocket():
 	HOST = 'localhost'
 	PORT = 4444
 	ADDR = (HOST, PORT)
 	newsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	newsocket.connect(ADDR)
+	logger.info('Connected to server.')
 	return newsocket
 
 
@@ -60,9 +67,12 @@ def check(path):
 		os.path.exists(path)
 		md5, filesize = checksum(path, 'check')
 		request = {'type': 'check', 'username': os.getlogin(), 'filename': sys.argv[1],'md5': md5, 'filesize': filesize}
+		logger.info('Requested file ' + request['filename'])
 		return request
 	except:
 		print(RED +'File delete is not permitted. Please provide an existing file.'+ END)
+		logger.error(request['filename'] + ' File not found.')
+		logger.info('Abort transfer request.')
 		sys.exit(0)
 	
 
@@ -82,3 +92,4 @@ if __name__ == '__main__':
 			print(GREEN + reply['message'] + END)
 		else:
 			print(RED + reply['message'] + END)
+		logger.info(request['filename'] + ' ' +  reply['message'])
