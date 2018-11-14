@@ -7,24 +7,24 @@
 
 import socket
 import os
+import logging
 
+username = os.getlogin()
 
-#HOST = '10.0.2.15'
+# establish connection
 HOST = 'localhost'
 PORT = 1111
 ADDR = (HOST, PORT)
 BUFSIZE = 4096
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sock.connect(ADDR)
-#machine = socket.gethostname()
 
+# handle request
 
-if __name__ == '__main__':
-    username = os.getlogin()
-    sock.send(username)
-    sock.shutdown(socket.SHUT_WR)
-    data = sock.recv(BUFSIZE)
-    print(data)
+sock.send(username)
+sock.shutdown(socket.SHUT_WR)
+data = sock.recv(BUFSIZE)
+print(data)
 
 
 

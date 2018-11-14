@@ -53,7 +53,6 @@ def checksum(File):
 	return md5.hexdigest(), len(content)
 
 
-
 def request(filename):
 	request = {'username': os.getlogin(), 'filename': filename}
 	sock = newsocket()
@@ -62,7 +61,6 @@ def request(filename):
 	sock.close()
 	return reply
 
-	
 
 def check(reply):
 	if reply['status'] == 404:
@@ -76,7 +74,7 @@ def check(reply):
 if __name__ == '__main__':
 	
 	if len(sys.argv) == 1:
-		print('Please provide a file to transfer.')
+		print('Please provide a filename to transfer.')
 	else:
 		File = os.getcwd() + '/' + sys.argv[1]
 		reply = request(sys.argv[1])
