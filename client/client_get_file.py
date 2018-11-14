@@ -12,7 +12,6 @@ import hashlib
 import pickle
 
 
-BUFSIZE = 4096
 
 RED = '\033[91m'	# fail
 GREEN = '\033[92m'	# success
@@ -21,13 +20,16 @@ YELLOW = '\033[93m'	# request sent
 END = '\033[0m'
 
 
-def newsocket():
-	HOST = 'localhost'
-	PORT = 3333
-	ADDR = (HOST, PORT)
-	newsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	newsocket.connect(ADDR)
-	return newsocket
+BUFSIZE = 4096
+HOST = 'localhost'
+PORT = 3333
+ADDR = (HOST, PORT)
+
+
+def connect():
+	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	sock.connect(ADDR)
+	return sock
 
 
 def send(request, sock):
@@ -55,7 +57,7 @@ def checksum(File):
 
 def request(filename):
 	request = {'username': os.getlogin(), 'filename': filename}
-	sock = newsocket()
+	sock = connect()
 	send(request, sock)
 	reply = receive(sock)
 	sock.close()
