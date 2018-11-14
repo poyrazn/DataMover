@@ -68,7 +68,21 @@ def request(File, mode):
 		print(RED + 'File does not exists. Please provide an existing filename.' + END)
 		sys.exit(0)
 	return reply
-	
+
+def check(reply):
+	if reply['status'] == 200:
+		print(GREEN + reply['message'] + END)
+		sys.exit(0)
+	else:
+		if reply['status'] == 404:
+			print(RED + reply['message'] + END)
+		elif reply ['status'] == 500:
+			print(RED + reply['message'] + END)
+			sys.exit(0)
+		else:
+			print(YELLOW + reply['message'] + END)
+		return True
+		
 
 if __name__ == '__main__':
 	
@@ -77,19 +91,11 @@ if __name__ == '__main__':
 	else:
 		File = os.getcwd() + '/' + sys.argv[1]
 		reply = request(File, 'check')
-		if reply['status'] == 200:
-			print(GREEN + reply['message'] + END)
-			sys.exit(0)
-		elif reply['status'] == 404:
-			print(RED + reply['message'] + END)
-		else:
-			print(YELLOW + reply['message'] + END)
-		print('Transfer protocol started')
-		reply = request(File, 'transfer', sock)
-		if reply['status'] == 200:
-			print(GREEN + reply['message'] + END)
-		else:
-			print(RED + reply['message'] + END)
+		if check(reply):
+			reply = request(File, 'transfer')
+			check(reply)
+			
+
 		
 
         	
