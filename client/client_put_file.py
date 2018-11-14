@@ -12,22 +12,21 @@ import hashlib
 import pickle
 
 
-BUFSIZE = 4096
-
 RED = '\033[91m'	# fail
 GREEN = '\033[92m'	# success
 LIGHTBLUE = '\033[96m'	# file already exists
 YELLOW = '\033[93m'	# request sent
 END = '\033[0m'
 
+BUFSIZE = 4096
+HOST = 'localhost'
+PORT = 2222
+ADDR = (HOST, PORT)
 
-def newsocket():
-	HOST = 'localhost'
-	PORT = 2222
-	ADDR = (HOST, PORT)
-	newsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	newsocket.connect(ADDR)
-	return newsocket
+def connect():
+	sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	sock.connect(ADDR)
+	return sock
 
 
 def send(request, sock):
@@ -60,7 +59,7 @@ def request(File, mode):
 			request =  {'type': mode, 'username': os.getlogin(), 'filename': sys.argv[1],'md5': md5, 'filesize': filesize}
 		if mode == 'transfer':
 			request =  {'type': mode,'username': os.getlogin(), 'filename': sys.argv[1], 'md5': md5, 'filesize': filesize , 'data' : data}
-		sock = newsocket()
+		sock = connect()
 		send(request, sock)
 		reply = receive(sock)
 		sock.close()
