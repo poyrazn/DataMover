@@ -18,10 +18,6 @@ import pickle
 # corrputed = 409 	(CONFLICT) 
 # not found = 404  (NOTFOUND)
 
-global client
-global path
-global filepath
-
 def receive():
 	pickled = sys.stdin.read()
 	request = pickle.loads(pickled)
@@ -33,52 +29,43 @@ def send(reply):
 	sys.stdout.flush()
 	
 
-def checksum(path, opt):
+def checksum(File):
 	md5 = hashlib.md5()
-	with open(path, 'r') as f:
+	with open(File, 'r') as f:
 		content = f.read()
 	md5.update(content.encode('utf-8'))
-	if opt == 'check':
-		return md5.hexdigest(), len(content)
-	if opt == 'transfer':
-		return content, md5.hexdigest(), len(content)
+	return md5.hexdigest(), len(content)
 	
 
-def check(request):
-	path = '/home/DataCloud/' + request['username'] + '/'
-	filepath = path + request['filename']
-	if os.path.exists(filepath):
-		md5, filesize = checksum(filepath, 'check')
-		if request['md5'] == md5 and request['filesize'] == filesize:
-			reply = {'status': 200, 'message': 'File already exists.' }	#do not transfer the file
+
+def reply(request):
+	File = '/home/DataCloud/' + request['username'] + '/' + request['filename']
+	if request['type'] == 'check':
+		if os.path.exists(File):
+			md5, filesize = checksum(File)
+			if request['md5'] == md5 and request['filesize'] == filesize:
+				reply = {'status': 200, 'message': 'File already exists.' }		# do not transfer the file
+			else:
+				reply = {'status': 409, 'message': 'File is either corrupted or outdated. Requested transmission...'}	# transfer
 		else:
-			reply = {'status': 409, 'message': 'File is either corrupted or outdated. Requested transmission...'}	# transfer
-	else:
-		reply = {'status': 404, 'message': 'File not found. Requested transmission...'}	# transfer
-
-	return reply
-
-
-def transfer(request):
-	path = '/home/DataCloud/' + request['username'] + '/'
-	filepath = path + request['filename']
-	with open(filepath, 'wb') as f:
-		f.write(request['data'])
-	md5, filesize = checksum(filepath, 'check')
-	if request['md5'] == md5 and request['filesize'] == filesize:
-		reply = {'status': 200, 'message': 'File is succesfully transferred' }
-	else:
-		reply = {'status': 500, 'message': 'Transmission failed, retry recommended.'}
-	return reply
+			reply = {'status': 404, 'message': 'File not found. Requested transmission...'}
+	
+	if request['type'] == 'transfer':
+		with open(File, 'wb') as f:
+			f.write(request['data'])
+		md5, filesize = checksum(File)
+		if request['md5'] == md5 and request['filesize'] == filesize:
+			reply = {'status': 200, 'message': 'File is succesfully transferred' }
+		else:
+			reply = {'status': 500, 'message': 'Transmission failed, retry recommended.'}
+	send(reply)
+	
 	
 if __name__ == '__main__':
 
 	request = receive()
-	if request['type'] == 'check':
-		reply = check(request)
-	if request['type'] == 'transfer':
-		reply = transfer(request)
-	send(reply)
+	reply(request)
+	
 	
 	
 	
