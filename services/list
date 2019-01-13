@@ -11,6 +11,6 @@ service list
     socket_type    = stream
     user           = root
     wait           = no
-    server         = /home/server/server_xinetd_list.py
+    server         = /home/nehir/DataMover/server/server_xinetd_list.py
     log_on_failure += USERID
 }
